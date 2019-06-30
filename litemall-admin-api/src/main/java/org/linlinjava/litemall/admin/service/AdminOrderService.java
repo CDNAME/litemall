@@ -59,6 +59,7 @@ public class AdminOrderService {
 
     public Object detail(Integer id) {
         LitemallOrder order = orderService.findById(id);
+        order.setShipChannel(expressService.getVendorName(order.getShipChannel()));
         List<LitemallOrderGoods> orderGoods = orderGoodsService.queryByOid(id);
         UserVo user = userService.findUserVoById(order.getUserId());
         Map<String, Object> data = new HashMap<>();
