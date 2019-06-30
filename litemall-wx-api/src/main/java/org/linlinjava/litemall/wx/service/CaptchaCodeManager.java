@@ -10,7 +10,7 @@ import java.util.Map;
  * 缓存系统中的验证码
  */
 public class CaptchaCodeManager {
-    private static Map<String, CaptchaItem> captchaCodeCache = new HashMap<>();
+    private static Map<String, CaptchaItem> captchaCodeCache = new ConcurrentHashMap<>();
 
     /**
      * 添加到缓存
@@ -19,8 +19,6 @@ public class CaptchaCodeManager {
      * @param code        验证码
      */
     public static boolean addToCache(String phoneNumber, String code) {
-
-
         //已经发过验证码且验证码还未过期
         if (captchaCodeCache.get(phoneNumber) != null) {
             if (captchaCodeCache.get(phoneNumber).getExpireTime().isAfter(LocalDateTime.now())) {
@@ -31,13 +29,22 @@ public class CaptchaCodeManager {
             }
         }
 
+        //如果时间已过期，则清理
+        for(Map.Entry<String, CaptchaItem> entry : captchaCodeCache.entrySet()) {
+            if(entry.getValue().getExpireTime().isBefore(LocalDateTime.now())) {
+                captchaCodeCache.remove(entry.getKey());
+            }
+        }
+
         CaptchaItem captchaItem = new CaptchaItem();
         captchaItem.setPhoneNumber(phoneNumber);
         captchaItem.setCode(code);
-        // 有效期为1分钟
-        captchaItem.setExpireTime(LocalDateTime.now().plusMinutes(1));
+        // 有效期为2分钟
+        captchaItem.setExpireTime(LocalDateTime.now().plusMinutes(2));
 
         captchaCodeCache.put(phoneNumber, captchaItem);
+
+        System.out.println("captchaCodeCache2->" + captchaCodeCache.toString());
 
         return true;
     }
