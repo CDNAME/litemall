@@ -109,7 +109,10 @@
     <el-dialog :visible.sync="shipDialogVisible" title="发货">
       <el-form ref="shipForm" :model="shipForm" status-icon label-position="left" label-width="100px" style="width: 400px; margin-left:50px;">
         <el-form-item label="快递公司" prop="shipChannel">
-          <el-input v-model="shipForm.shipChannel"/>
+          <el-select v-model="shipForm.shipChannel" style="width: 200px" class="filter-item" placeholder="请选择快递公司">
+            <el-option v-for="(key, value) in expressMap" :key="key" :label="key" :value="value"/>
+          </el-select>
+          <!--<el-input v-model="shipForm.shipChannel"/>-->
         </el-form-item>
         <el-form-item label="快递编号" prop="shipSn">
           <el-input v-model="shipForm.shipSn"/>
@@ -156,6 +159,38 @@ const statusMap = {
   301: '已发货',
   401: '用户收货',
   402: '系统收货'
+}
+
+const expressMap = {
+  "ZTO": "中通快递",
+  "EMS": "EMS",
+  "YD": "韵达速递",
+  "YTO": "圆通速递",
+  "ZJS": "宅急送",
+  "SF": "顺丰速运",
+  "STO": "申通快递",
+  "HTKY": "百世快递",
+  "YDKY": "韵达快运",
+  "YZPY": "邮政快递包裹",
+  "HHTT": "天天快递",
+  "JD": "京东快递",
+  "UC": "优速快递",
+  "DBL": "德邦快递",
+  "TNT": "TNT快递",
+  "FEDEX": "FEDEX联邦(国内件)",
+  "ANEKY": "安能快运",
+  "BTWL": "百世快运",
+  "CITY100": "城市100",
+  "CND": "承诺达",
+  "DBLKY": "德邦快运",
+  "FASTGO": "速派快递",
+  "GDEMS": "广东邮政",
+  "GTSD": "高铁速递",
+  "JDKY": "京东快运",
+  "RRS": "日日顺物流",
+  "WXWL": "万象物流",
+  "YZBK": "邮政国内标快",
+  "ZTOKY": "中通快运"
 }
 
 export default {
